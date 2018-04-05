@@ -93,10 +93,10 @@ class smbd(connection):
         rpcservices.OS_TYPE = self.config.os_type
 
     def handle_established(self):
-        #		self.timeouts.sustain = 120
+        #       self.timeouts.sustain = 120
         self.timeouts.idle = 120
-#		self._in.accounting.limit  = 2000*1024
-#		self._out.accounting.limit = 2000*1024
+#       self._in.accounting.limit  = 2000*1024
+#       self._out.accounting.limit = 2000*1024
         self.processors()
 
     def handle_io_in(self,data):
@@ -144,11 +144,11 @@ class smbd(connection):
             smblog.warning("p.haslayer(Raw): %s" % p.getlayer(Raw).build())
             p.show()
 
-#		i = incident("dionaea.module.python.smb.info")
-#		i.con = self
-#		i.direction = 'in'
-#		i.data = p.summary()
-#		i.report()
+#       i = incident("dionaea.module.python.smb.info")
+#       i.con = self
+#       i.direction = 'in'
+#       i.data = p.summary()
+#       i.report()
 
         if self.state['stop']:
             smblog.info("faint death.")
@@ -158,13 +158,13 @@ class smbd(connection):
             smblog.debug("response: %s" % r.summary())
             r.show()
 
-#			i = incident("dionaea.module.python.smb.info")
-#			i.con = self
-#			i.direction = 'out'
-#			i.data = r.summary()
-#			i.report()
+#           i = incident("dionaea.module.python.smb.info")
+#           i.con = self
+#           i.direction = 'out'
+#           i.data = r.summary()
+#           i.report()
 
-#			r.build()
+#           r.build()
             #r.show2()
             self.send(r.build())
         else:
@@ -183,7 +183,7 @@ class smbd(connection):
     def process(self, p):
         r = ''
         rp = None
-#		self.state['readcount'] = 0
+#       self.state['readcount'] = 0
         # if self.state == STATE_START and p.getlayer(SMB_Header).Command ==
         # 0x72:
         rstatus = 0
@@ -207,7 +207,7 @@ class smbd(connection):
 
             r.DialectIndex = c
 
-#			r.Capabilities = r.Capabilities & ~CAP_EXTENDED_SECURITY
+#           r.Capabilities = r.Capabilities & ~CAP_EXTENDED_SECURITY
             if not p.Flags2 & SMB_FLAGS2_EXT_SEC:
                 r.Capabilities = r.Capabilities & ~CAP_EXTENDED_SECURITY
 
@@ -237,10 +237,10 @@ class smbd(connection):
                         rntlmssp = NTLMSSP_Header(MessageType=2)
                         rntlmchallenge = NTLM_Challenge(
                             NegotiateFlags=ntlmnegotiate.NegotiateFlags)
-#						if ntlmnegotiate.NegotiateFlags & NTLMSSP_REQUEST_TARGET:
-#							rntlmchallenge.TargetNameFields.Offset = 0x38
-#							rntlmchallenge.TargetNameFields.Len = 0x1E
-#							rntlmchallenge.TargetNameFields.MaxLen = 0x1E
+#                       if ntlmnegotiate.NegotiateFlags & NTLMSSP_REQUEST_TARGET:
+#                           rntlmchallenge.TargetNameFields.Offset = 0x38
+#                           rntlmchallenge.TargetNameFields.Len = 0x1E
+#                           rntlmchallenge.TargetNameFields.MaxLen = 0x1E
 
                         rntlmchallenge.ServerChallenge = b"\xa4\xdf\xe8\x0b\xf5\xc6\x1e\x3a"
                         rntlmssp = rntlmssp / rntlmchallenge
@@ -288,10 +288,10 @@ class smbd(connection):
                             rntlmchallenge = NTLM_Challenge(
                                 NegotiateFlags=ntlmnegotiate.NegotiateFlags)
                             rntlmchallenge.TargetInfoFields.Offset = rntlmchallenge.TargetNameFields.Offset = 0x30
-#							if ntlmnegotiate.NegotiateFlags & NTLMSSP_REQUEST_TARGET:
-#								rntlmchallenge.TargetNameFields.Offset = 0x38
-#								rntlmchallenge.TargetNameFields.Len = 0x1E
-#								rntlmchallenge.TargetNameFields.MaxLen = 0x1E
+#                           if ntlmnegotiate.NegotiateFlags & NTLMSSP_REQUEST_TARGET:
+#                               rntlmchallenge.TargetNameFields.Offset = 0x38
+#                               rntlmchallenge.TargetNameFields.Len = 0x1E
+#                               rntlmchallenge.TargetNameFields.MaxLen = 0x1E
                             rntlmchallenge.ServerChallenge = b"\xa4\xdf\xe8\x0b\xf5\xc6\x1e\x3a"
                             rntlmssp = rntlmssp / rntlmchallenge
                             rntlmssp.show()
@@ -333,7 +333,7 @@ class smbd(connection):
         elif Command == SMB_COM_TREE_CONNECT_ANDX:
             r = SMB_Treeconnect_AndX_Response()
             h = p.getlayer(SMB_Treeconnect_AndX_Request)
-#			print ("Service : %s" % h.Path)
+#           print ("Service : %s" % h.Path)
 
             # for SMB_Treeconnect_AndX_Request.Flags = 0x0008
             if h.Flags & 0x08:
@@ -476,7 +476,7 @@ class smbd(connection):
                 self.fids[h.FID].write(h.Data)
             else:
                 self.buf += h.Data
-#				self.process_dcerpc_packet(p.getlayer(SMB_Write_AndX_Request).Data)
+#               self.process_dcerpc_packet(p.getlayer(SMB_Write_AndX_Request).Data)
                 if len(self.buf) >= 10:
                     # we got the dcerpc header
                     inpacket = DCERPC_Header(self.buf[:10])
@@ -544,9 +544,9 @@ class smbd(connection):
             if TransactionName[-1] == '\0':
                 TransactionName = TransactionName[:-1]
 
-#			print("'{}' == '{}' => {} {} {}".format(TransactionName, '\\PIPE\\',
-#				TransactionName == '\\PIPE\\', type(TransactionName) == type('\\PIPE\\'),
-#				len(TransactionName)) )
+#           print("'{}' == '{}' => {} {} {}".format(TransactionName, '\\PIPE\\',
+#               TransactionName == '\\PIPE\\', type(TransactionName) == type('\\PIPE\\'),
+#               len(TransactionName)) )
 
 
             if TransactionName == '\\PIPE\\LANMAN':
@@ -724,7 +724,7 @@ class smbd(connection):
             smbh = SMB_Header(Status=rstatus)
             smbh.Command = r.smb_cmd
             smbh.Flags2 = p.getlayer(SMB_Header).Flags2
-#			smbh.Flags2 = p.getlayer(SMB_Header).Flags2 & ~SMB_FLAGS2_EXT_SEC
+#           smbh.Flags2 = p.getlayer(SMB_Header).Flags2 & ~SMB_FLAGS2_EXT_SEC
             smbh.MID = p.getlayer(SMB_Header).MID
             smbh.PID = p.getlayer(SMB_Header).PID
             # Deception for DoublePulsar, we fix the XOR key first as 0x5273365E
@@ -758,8 +758,8 @@ class smbd(connection):
         except:
             return None
         if dcep.AuthLen > 0:
-            #			print(dcep.getlayer(Raw).underlayer.load)
-            #			dcep.getlayer(Raw).underlayer.decode_payload_as(DCERPC_Auth_Verfier)
+            #           print(dcep.getlayer(Raw).underlayer.load)
+            #           dcep.getlayer(Raw).underlayer.decode_payload_as(DCERPC_Auth_Verfier)
             dcep.show()
 
         if dcep.PacketType == 11: #bind
